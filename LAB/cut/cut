@@ -1,0 +1,3 @@
+1) $ cut -d$'\t' -f1 deneme.det
+2) $ cat test.det | cut -d$'\t'
+3) $ getent passwd | cut -d: -f1

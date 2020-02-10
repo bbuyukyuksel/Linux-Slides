@@ -1,0 +1,121 @@
+1. Python [SimpleHTTPServer | http.server]'dan bahset.
+2. Vimtutor'dan bahset.
+
+Komutlar
+Hatırlama:
+	*paste
+	*split
+-sort
+-uniq
+-grep
+-find
+-locate
+-which
+-file
+-tr
+-du --max-depth=0 -h
+-df -h
+
+
+
+#Lab Soruları
+Soru 1) Yalnızca kök dizinin boş alanının bulunduğu satırı MB, GB gibi gösterimle görebileceğim komut nedir?
+Soru 2)	Bilgisayarı kapatmadan yeni oluşturulan wp-config.ini dosyasının nerede olduğunu hatırlamıyorsanız ne yapmanız gerekir?
+Soru 3) "lscpu" çıktısında bulunabilen çekirdek sayısı, Online CPU ID, Core başına thread ve soket başına core sayılarını alt alta ekrana yazdırmak için ne gibi bir komut kullanmamız gerekir?
+Soru 4) Sistemde "test" ile birebir eşleşen tüm dosyaları locate ve cut kullanarak bulup, yeni bir dosyaya nasıl yazabiliriz?
+LAB Klasörü altındaki örnekleri incele
+
+Kullanıcı Yönetimi
+-Kullanıcı ilkelerini sorgulamak için:
+	$ chage -l kullanici
+
+-Kullanıcı parola süresi dolma tarihi ekleme
+	$ chage -E 2018/08/09 kullanici
+
+-Parolanın 30 günde bir değiştirilmesi ve son 5 gün uyarı vermesi
+	$ chage -M 30 -W 5 kullanici
+
+-Parola değiştirmeye zorlama
+	$ chage -d 0 kullanici
+
+-Hesabı kilitlemek ve açmak:
+
+	$ usermod -L kullanici
+	$ usermod -U kullanici
+
+
+Linkler 
+-Hard Link
+ln dosya1 dosya2
+
+-Soft Link
+ln -s dosya1 dosya2
+
+
+SSH
+0.) Bağlantı kurulacak bilgisayara openssh-server yükle
+	$ sudo apt install openssh-server
+1.) Export / Import VirtualBox
+2.) İkinci işletim sisteminde host adını değiştir
+	$ hostnamectl set-hostname test
+3.) SSH bağlantısı yap
+	-Port 22 ise : 
+		$ ssh user@IPADRESS
+	-Alternatif port adresi için:
+		$ ssh -p 2222 user@IPADRESS	
+4.) SSH-KEYGEN üret
+	$ ssh-keygen -t rsa
+5.) SSH-COPY-ID kullan
+	$ ssh-copy-id -p 22 user@IPADRESS
+6.) SSH Portu değiştirmek
+	$ nano /etc/ssh/sshd_config 
+	$ /etc/init.d/sshd restart 
+
+
+SCP
+İnternete çıkan iki sunucu arasında dosya transferi yapmak için kullanılan bir komuttur.
+
+IP adresine dosya transfer:
+scp /dosya_klasör/dosya_adi user@IPADRES:/home/test/Masaüstü/.
+
+IP adresine klasör transfer:
+scp -r /yol/klasör_adı user@IPADRESS:/home/test/Masaüstü
+
+
+Rsync nedir? 
+rsync, uzak ya da lokal olarak dosya transferi işlemlerini gerçekleştiren ve bu işlemlerde kullandığı algoritma sayesinde daha hızlı sonuç sağlayan bir senkronizasyon aracı olarak ifade edilebilir. 
+Genel işlem olarak dosyaların tekrar yazılmasındansa değişikliklerin uygulanması üzerine işlemleri gerçekleştirmektedir. 
+Özelleştirmelerle birlikte oldukça esnek bir kullanım olanağı sunan rsync, network-enabled senkronizasyon aracı olarak belirtilebilir. 
+En temel kullanımı şu şekildedir: 
+	$ rsync [kaynak-dosya-ya-da-klasor] [hedef-dosya-ya-da-klasor]
+
+Birden fazla dosyayı hedef bir dizine iletmek için ise dosyalar sırasıyla hedef öncesinde belirtilir
+	$ rsync -R [kaynak-dosya-1] [kaynak-dosya-2] [hedef-klasor] 
+
+Bir kaç örnek ile senkronizasyon işlemlerine başlayalım. 
+İçeriğinde bir çok metin dökümanı (touch ./file{1..50}.txt ile yaratabilirsiniz)
+olan /yazilar klasörümüze ait içeriği bir üst dizindeki /icerikler klasörüne taşıyalım. 
+Not: Eğer kaynak klasör daha önceden oluşturulmuş bir klasör değilse belirtilen hedefte oluşturulacaktır
+	$ rsync -arv /yazilar/ ../icerikler 
+-r opsiyonu ile tekrarlamları şekilde klasör senkronizasyonu işleme alıyoruz. 
+-v ile de işlem sonucunda yapılan işlemlere dair açıklama talep ediyoruz. 
+-a ise sembolik linkler, özel sürücü dosyaları, modifikasyon zamanı, izinler gibi yapılandırmaların da aktarılmasını sağlamaktadır. 
+
+Yukarıdaki örnekte kaynak klasör olarak belirttiğimiz /yazilar’in sonunda bir slash (/) dikkatinizi çekmiş olabilir. 
+Eğer bir klasörün içeriğinin aktarılmasını isterseniz sonuna slash koymanız gerekiyor. 
+Aksi durumda kaynak olarak belirttiğiniz klasör olduğu gibi hedef klasör içerisine alt klasör olarak eklenecektir.
+
+Lokalde gerçekleştirdiğimiz örneklerin biraz daha ötesine çıkalım ve uzak sunucu bilgisayar, bilgisayar uzak sunucu ve uzak sunucular arasında senkronizasyon işlemleri gerçekleştirelim. 
+	$ rsync -aruve ssh [kaynak-dosya-ya-da-dizin] [kullanici-adi]@[sunucu-domain-veya-ipadresi]:[hedef-dizin]  
+
+
+
+
+
+#Lab Çözümleri
+1.) $ df -h | grep -w "/"
+2.) $ sudo updatedb && locate 
+3.) $ lscpu | grep -A 3 "^CPU(s):"
+	veya
+    $ lscpu | grep -wA 3 "CPU(s)" | head -n4
+4.) $ locate test | rev |cut -d/ -f1 | rev | grep -w "test" | nl

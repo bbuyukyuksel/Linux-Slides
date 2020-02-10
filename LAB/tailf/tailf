@@ -1,0 +1,3 @@
+1) tail -n5 A
+2) tail -fn5 A
+3) tailf -n5 A

@@ -1,0 +1,2 @@
+echo -e "$(head -n 5 test)\nAraya Yazıldı\n$(tail -n2 test)"
+

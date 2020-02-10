@@ -1,0 +1,10 @@
+# Rename
+1. a0 b0 c0 d0 dosyalarını oluştur
+2. Dosya isimlendirmelerini büyük harflere çevir
+3. Tüm dosyalarda 0'ları .txt ile değiştir
+
+
+Çözüm
+$ touch a0 b0 c0 d0
+$ rename "y/a-z/A-Z/" *
+$ rename "s/0/.txt/" *

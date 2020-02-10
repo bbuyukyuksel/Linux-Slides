@@ -1,0 +1,4 @@
+#	1.	India
+@	2.	Nigeria
+&	3.	The Netherlands
+*	4.	The US
